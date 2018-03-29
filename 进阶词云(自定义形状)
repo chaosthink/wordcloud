@@ -1,0 +1,91 @@
+#自定义词云情况
+nstall.packages("RColorBrewer")
+
+library(RColorBrewer)
+
+##心形曲线
+
+t<-seq(0,60,len=100)
+
+x<- -.01*(-t^2+40*t+1200)*sin(pi*t/180)
+
+y<-.01*(-t^2+40*t+1200)*cos(pi*t/180)
+
+plot(c(-12,14),c(0,20),type='n',axes=T,xlab='',ylab='')
+
+polygon(x,y,col="black",border=NA)
+
+polygon(-x,y,col="black",border=NA)
+
+#因为我们黑色区域是词云的填充区域，把坐标轴去掉，格式为.png，储存到目标路径下。
+
+#第二步导出微信聊天记录
+
+##无奈忘记了密码，无法登录iTunes Store，所以本文以闪亮亮高大上的《山东省政府工作报告-选段》为素材。
+
+#从参考某度导出微信聊天记录。
+
+#导出格式为.txt或.csv没影响。
+第三步做心形词云
+
+##所需要加载的包
+
+#（如果报错遇神杀神install packages遇佛杀佛just do it again）
+
+library(RColorBrewer)
+
+library(jiebaRD)
+
+library(jiebaR)
+
+library(wordcloud2)
+
+#分词,使用jiebaR包
+
+wk = worker()
+
+wk['./sdzf.txt']
+
+#sdzf.txt为山东省政府报告选段。此代码会自动生成一个分成完成的.txt文件，名为sdzf.segment.2018-02-14_13_57_48.txt，记得后面代码文件名替换成自己的文件。
+#读入数据分隔符是‘\n’，字符编码是‘UTF-8’，what=''表示以字符串类型读入
+
+f <- scan('D:/rdata/sdzf.segment.2018-02-14_13_57_48.txt',sep='\n',what='',encoding="UTF-8")
+
+#使用qseg类型分词，并把结果保存到对象seg中
+
+seg <- qseg[f]
+
+#去除字符长度小于2的词语
+
+seg <- seg[nchar(seg)>1]
+
+#统计词频
+
+seg <- table(seg)
+
+#显示词频
+
+seg
+
+#去除数字
+
+seg <- seg[!grepl('[0-9]+',names(seg))]
+
+#查看处理完后剩余的词数
+
+length(seg)
+
+#降序排序，并提取出现次数最多的前200个词语
+
+seg <- sort(seg, decreasing = TRUE)[1:200]
+
+#查看200个词频最高的
+
+seg
+
+###手动清洗掉吵架内容和异性名字，不然结果非死即伤！
+wordcloud2(seg,figPath='heartblack.png')
+
+##heartblack.png为第一步做的图。
+#为贴合我们素材的主体，又做了一个山东版图的词云。
+wordcloud2(seg,figPath ='shandong.png')
